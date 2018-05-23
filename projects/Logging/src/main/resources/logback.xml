@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="LOG_HOME" value="home/logs" /> 
+	<!-- 负责写日志的组件，有两个必要属性name和class -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender"><!-- 把日志输出到控制台 -->
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} |- %-5level in %logger{50} - %msg%n</pattern>
+		</layout>
+	</appender>
+	
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender"><!-- 滚动记录文件，先将日志文件指定到文件，当符合某个条件时，将日志记录到其他文件。 -->
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>300</maxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} |- %-5level in %logger{50} - %msg%n</pattern>
+		</layout>
+		<!--日志文件最大的大小 -->
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
+		<append>true</append><!-- 默认为true。如果是true，日志被追加到文件结尾，如果是false，清空现存文件 -->
+		<prudent>false</prudent><!-- 默认为false。如果是true，日志会被安全的写入文件，即其他的FileAppender也在向此文件做写入操作，效率低 -->
+	</appender>
+	
+	
+	<!-- root的默认level是DEBUG -->
+	<root>
+		<appender-ref ref="console" />
+		<appender-ref ref="file" />
+	</root>
+</configuration>
